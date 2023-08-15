@@ -35,7 +35,8 @@ Below is the screenshot showing sucessful installation:
 ![yosys](https://github.com/mavi62/IIITB_VLSI/assets/57127783/24dea86f-6bba-4835-bcf8-db0da6101ace)
 
 </details>
- <details>
+
+<details>
  <summary> OpenSTA </summary>
 
 
