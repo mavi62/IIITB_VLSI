@@ -162,7 +162,7 @@ Below is the screenshot showing sucessful launch:
 ## Day 1
 
 <details>
-  <summary>Simulation</summary>
+  <summary>Summary</summary>
   
   **Simulator:** It is a tool for checking the design written in HDL. RTL design is checked for the the adherence to to spexifaction of required circuit.
  
@@ -197,6 +197,20 @@ In this lab session we were made familiar with the linux operating system as wel
 
 ![clone 2](https://github.com/mavi62/IIITB_VLSI/assets/57127783/e11d5ca5-c523-481f-afe3-d72fb69d8eed)
 
+</details>
+
+<details>
+<summary> Simulation: iverilog and gtkwave </summary>
+ 
+ I used the following commands to simulate and view the plots of the RTL design:
+	
+ ```bash
+ iverilog <name verilog: good_mux.v> <name testbench: tb_good_mux.v>
+ ./a.out
+ gtkwave tb_good_mux.vcd
+ ```
+	
+ Below is the screenshot of the gtkwave plots:
 
 ![clone3](https://github.com/mavi62/IIITB_VLSI/assets/57127783/a9b0b71b-903e-4a2b-9ee2-a5c3e122fac1)
 
@@ -260,7 +274,7 @@ Here is the code used in todays lab :<br />
 ![2](https://github.com/mavi62/IIITB_VLSI/assets/57127783/4ceee7d4-92b5-451b-9e85-d1fc819692e1)
 
 
-  **Yosys**:It is a framework for RTL synthesis. It provides a basic set of synthesis algorithms for various application domains. Yosys is the core component of most our implementation and verification flows.
+  **Yosys**: It is a framework for RTL synthesis. It provides a basic set of synthesis algorithms for various application domains. Yosys is the core component of most our implementation and verification flows.
   
 ![3](https://github.com/mavi62/IIITB_VLSI/assets/57127783/8382b5c5-2a14-43f7-a883-9fda887b7a37)
 
@@ -274,20 +288,40 @@ Below are the commands to perform above synthesis.
 ![4](https://github.com/mavi62/IIITB_VLSI/assets/57127783/a169bf08-ae9b-46c3-97f2-03f2872a9553)
 
 
+In the directory of the verilog files, I used the following commands to synthesize and view the synthesized deisgn:
+	
+ ```bash
+yosys> read_liberty -lib <path to lib file>
+yosys> read_verilog <path to verilog file>
+yosys> synth -top <top_module_name>
+yosys> abc -liberty <path to lib file>
+yosys> show
+ ```
+ Below is the screenshot of the synthesized design:
+
+
 ![synth_1](https://github.com/mavi62/IIITB_VLSI/assets/57127783/14be6283-143c-424d-afc3-650684a3b566)
 
 
 **.lib :** It is a collection of logical modules like logic gates. It contains cells with different sppeds, no. of inputs etc. that can be used as required.
 
+ I used the following command to generate the netlist:
+ ```bash
+ yosys> write_verilog -noattr <file_name_netlist.v>
+ ```
+ 
+ Below is the screenshot of the generated netlist:
+
+ 
 ![vim](https://github.com/mavi62/IIITB_VLSI/assets/57127783/483ec355-769d-49a3-a369-d750208e1282)
 
 **Need for different speed of gates:**
   
- ![5](https://github.com/mavi62/IIITB_VLSI/assets/57127783/97828782-a3fd-4b23-9ee0-134616841b0d)
+![5](https://github.com/mavi62/IIITB_VLSI/assets/57127783/97828782-a3fd-4b23-9ee0-134616841b0d)
  
    - We need gates fast enough so that the total delay of all the gates is smaller than the T(clk).
    
- ![6](https://github.com/mavi62/IIITB_VLSI/assets/57127783/81bbc5b9-3343-4461-8f45-f4b5a9f15eb7)
+![6](https://github.com/mavi62/IIITB_VLSI/assets/57127783/81bbc5b9-3343-4461-8f45-f4b5a9f15eb7)
  
    - If we want to capture B in next clock cycle rather than the same, we need to make the delay larger than the whole time, so some cells need to work slowly
 
