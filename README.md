@@ -298,6 +298,8 @@ Below are the commands to perform above synthesis.
 - Wider transistor gives lower delay: but more is required and more power is required
 - Narrow transistors give out more delay  : we need less area and less power is consumed.
 
+</details>
+  
 # Day-2
 
 <details>
