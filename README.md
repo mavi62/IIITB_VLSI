@@ -114,4 +114,36 @@ sudo apt-get install libncurses-dev
  Below is the screenshot showing sucessful installation:
  ![magic](https://github.com/mavi62/IIITB_VLSI/assets/57127783/22ed2199-8a03-4481-9905-0b6a307715cc)
 
+ </details>
+
+
+ <details>
+ <summary> OpenLane & Docker </summary>
+
+
+ I installed OpenLane & Docker using the following commands:
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt install -y build-essential python3 python3-venv python3-pip make git
+
+sudo apt install apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+sudo apt update
+
+sudo apt install docker-ce docker-ce-cli containerd.io
+
+sudo docker run hello-world
+
+sudo groupadd docker
+sudo usermod -aG docker $USER
+sudo reboot 
+
+docker run hello-world
+
+Below is the screenshot showing sucessful launch:
+![docker](https://github.com/mavi62/IIITB_VLSI/assets/57127783/72a85660-7514-4282-b9e2-aa92126c378a)
+
  ## Day 1
