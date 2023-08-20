@@ -8,11 +8,11 @@ This github repository summarizes the progress made in the VSD-HDP tapeout progr
 
 [Day 2 : Timing libs,hierarchical,flat synthesis,efficient flop coding styles](#day-2)
 
-[Day 3](#day-3)
+[Day 3 : Combinational and sequential optimizations](#day-3)
 
-[Day 4](#day-4)
+[Day 4 : GLS, Blocking vs Non-Blocking and Synthesis - Simulation mismatch](#day-4)
 
-[Day 5](#day-5)
+[Day 5 : If,Case,for loop and for generate.](#day-5)
 
 ## Day 0
 
@@ -1663,3 +1663,18 @@ endmodule
 has been correctly synthesizer. The advantage of using generate for is that we have to
 instantiate once and the code multiple copies, ie multiple instances as defined.
 </details>
+
+## Acknowledgement
+- Kunal Ghosh, VSD Corp. Pvt. Ltd.
+- Skywater Foundry
+- Chatgtp
+- Simar, Colleauge(IIIT-B)
+- Alwin, Colleauge(IIIT-B)
+
+## References
+1. https://yosyshq.net/yosys/
+2. https://steveicarus.github.io/iverilog/
+3. https://gtkwave.sourceforge.net/
+4. https://ngspice.sourceforge.io/
+5. https://github.com/The-OpenROAD-Project/OpenSTA
+6. http://opencircuitdesign.com/magic/
