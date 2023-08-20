@@ -12,6 +12,8 @@ This github repository summarizes the progress made in the VSD-HDP tapeout progr
 
 [Day 4](#day-4)
 
+[Day 5](#day-5)
+
 ## Day 0
 
 <details>
@@ -1261,4 +1263,403 @@ endmodule
 - There is clear mismatch between the simulation and synthesis in this case. This happended coz
 we used blocking statements, and while simulation, the design makes a flop, which wasn't the
 intention of the original design.
+</details>
+
+## Day 5
+
+<details>
+<summary> Summary </summary>
+I have first learned about "if" and "case" statements which are used inside always blocks.
+</details>
+<details>
+<summary> If and Case constructs </summary>
+	
+***if costruct***
+The construct *if* is mainly used to create priority logic. In a nested if else construct, the 
+conditions are given priority from top to bottom. Only if the condition is satisfied, if 
+statement is executed and the compiler comes out of the block. If condition fails, it checks for 
+next condition and so on as shown below.
+**Syntax for nested if else**
+
+```bash
+if (<condition 1>)
+begin
+-----------
+-----------
+end
+else if (<condition 2>)
+begin
+-----------
+-----------
+end
+else if (<condition 3>)
+.
+.
+.
+```
+
+**Dangers of *if* construct**
+If use a bad coding style i.e, using incomplete if else constructs will infer a latch. We 
+definetly don't require an unwanted latch in a combinational circuit. When an incomplete 
+construct is used, if all the conditions are failed, the input is latched to the output and 
+hence we don't get desired output unless we need a latch.
+
+![1](https://github.com/mavi62/IIITB_VLSI/assets/57127783/496d0046-d457-49f7-8701-c645a82c204f)
+
+
+***Case construct***
+**syntax**
+
+```bash
+case(statement)
+  case1: begin
+       --------
+	 --------
+	 end
+ case2: begin
+	     --------
+	 --------
+	 end
+ default:
+ endcase
+```
+
+In case construct, the execution checks for all the case statements and whichever satisfies the 
+statement, that particular statement is executed.If there is no match, the default statement is 
+executed. But here unlike if construct, the execution doesn't stop once statement is satisfied, 
+but it continues further.
+
+**Caveats in Case**
+Caveats in case occur due to two reasons. One is **incomplete case statements** and the other is **partial assignments in case statements**.
+</details>
+<details>
+<summary> Lab on Incomplete *if*</summary>
+
+**LAB_1 incomp_if**
+**RTL code for incom_if.v**
+
+```bash
+module incomp_if (input i0 , input i1 , input i2 , output reg y);
+always @ (*)
+begin
+	if(i0)
+		y <= i1;
+end
+endmodule
+```
+
+- simulation using iverilog and gtkwave
+  
+![2](https://github.com/mavi62/IIITB_VLSI/assets/57127783/9e4e72ba-fc76-4e82-9895-5f818905bc9f)
+
+
+- synthesis using yosys
+  
+![3](https://github.com/mavi62/IIITB_VLSI/assets/57127783/568a2c5a-2490-4786-a448-b4a38a0a95e2)
+
+
+- It is seen that there has been an inferred latch formation due to incomplete if-else
+condtional statements.
+
+**LAB_2 incomp_if2**
+**RTL code for incomp_if2.v**
+
+```bash
+
+module incomp_if2 (input i0 , input i1 , input i2 , input i3, output reg y);
+always @ (*)
+begin
+	if(i0)
+		y <= i1;
+	else if (i2)
+		y <= i3;
+
+end
+endmodule
+```
+
+- Simulation using iverilog and gtkwave
+  
+![4](https://github.com/mavi62/IIITB_VLSI/assets/57127783/4bc51300-b1db-4219-88fd-d80d824c6b63)
+
+- Synthesis using yosys
+  
+![5](https://github.com/mavi62/IIITB_VLSI/assets/57127783/3fd7736b-52b9-4dd5-961c-8e324ce567fb)
+
+- It is seen that there has been an inferred latch formation due to incomplete if-else
+condtional statements.
+
+</details>
+<details>
+<summary> LAB on **case** construst </summary>
+Here we'll look into various situations with case statement under simulation and synthesis
+
+**LAB_1 wihout default**
+We look into the formation of inffered latcg due toomission of default case.
+
+**RTL code for incomp_case.v**
+```bash
+module incomp_case (input i0 , input i1 , input i2 , input [1:0] sel, output reg y);
+always @ (*)
+begin
+	case(sel)
+		2'b00 : y = i0;
+		2'b01 : y = i1;
+	endcase
+end
+endmodule
+```
+- Running RTL simulation using iverilog and gtkwave
+
+![6](https://github.com/mavi62/IIITB_VLSI/assets/57127783/e5590545-ed9a-41d7-a2a5-5bdc34af5df7)
+
+- synthesis using yosys
+  
+![7](https://github.com/mavi62/IIITB_VLSI/assets/57127783/64fd5247-1ca8-4eb5-b23c-0b9222e453ce)
+
+- It is seen due to omission of default case we have an inferred latch in hardware design
+
+  **LAB_2 with default**
+  We'll look into how default cae removes the frmation of a latch
+
+  **RTL code for comp_case.v**
+  
+  ```bash
+  module comp_case (input i0 , input i1 , input i2 , input [1:0] sel, output reg y);
+  always @ (*)
+  begin
+	case(sel)
+		2'b00 : y = i0;
+		2'b01 : y = i1;
+		default : y = i2;
+	endcase
+  end
+  endmodule
+  ```
+  
+- Running simulation using verilog and gtkwave
+
+![8](https://github.com/mavi62/IIITB_VLSI/assets/57127783/464db982-8cb9-449a-b1d1-887fee70dc35)
+
+- running synthesis using yosys
+  
+![9](https://github.com/mavi62/IIITB_VLSI/assets/57127783/bd03d4ac-5e49-4e9f-a135-bb326b613d96)
+
+- here we see no inferred latch
+
+**LAB_3 partial case assignment**
+we look into how partial case assignments cause the formation of inferred latch.
+
+**RTL code for partial _case_assign.v**
+
+```bash
+module partial_case_assign (input i0 , input i1 , input i2 , input [1:0] sel, output reg y , output reg x);
+always @ (*)
+begin
+	case(sel)
+		2'b00 : begin
+			y = i0;
+			x = i2;
+			end
+		2'b01 : y = i1;
+		default : begin
+		           x = i1;
+			   y = i2;
+			  end
+	endcase
+end
+endmodule
+```
+
+- Running simulation using iverilog and gtkwave
+
+![10](https://github.com/mavi62/IIITB_VLSI/assets/57127783/f86de402-48fd-405c-a668-30ad490066ea)
+
+- Synthesis using yosys
+
+![11](https://github.com/mavi62/IIITB_VLSI/assets/57127783/dcda91c7-e290-4459-a4a4-2f5d215afff9)
+
+- Its is noticed that we have a latch in the design of the hardware even when we didn't had one in RTL file. This is due to the partial case assignment.
+
+**LAB_4 the bad Case**
+Under this, we look into the case of a bad case, which has simulation synthesis mismatch due to 
+the improper assignment for case 1'b1?. This leads to formation of inferred latches.
+
+**RTL code for bad_case.v**
+
+```bash
+module bad_case (input i0 , input i1, input i2, input i3 , input [1:0] sel, output reg y);
+always @(*)
+begin
+	case(sel)
+		2'b00: y = i0;
+		2'b01: y = i1;
+		2'b10: y = i2;
+		2'b1?: y = i3;
+		//2'b11: y = i3;
+	endcase
+end
+
+endmodule￼
+```
+
+- Simulation using iverilog and gtkwave
+  
+![12](https://github.com/mavi62/IIITB_VLSI/assets/57127783/fdbe7c97-30cd-4b11-b25f-53e98cccaf25)
+
+- Synthesis using yosys
+
+![13](https://github.com/mavi62/IIITB_VLSI/assets/57127783/941ff4a2-ff00-44c9-a7bd-76cdad5b591f)
+
+- Running GLS using iverilog and gtkwave fromnetlist obtained under synthesis
+  
+![14](https://github.com/mavi62/IIITB_VLSI/assets/57127783/16714d3a-0de7-4980-a797-39a71a517f24)
+
+- We can see the mismatching under GLS and RTL simulation. This is due to improper assignment and formation of latches which weren't a part of the intended logic design.
+  
+</details>
+
+<details>
+<summary> for loop and for generate </summary>
+	
+**For Loop**
+
+- For look is used in always block
+- It is used for excecuting expressions alone
+
+**Generate For loop**
+
+- Generate for loop is used for instantaing hardware
+- It should be used only outside always block
+
+For loop can be used to generate larger circuits like 256:1 multiplexer or 1-256 demultiplexer 
+where the coding style of smaller mux is not feesible and can have human errors since we would 
+need to include huge number of combinations.
+
+FOR Generate can be used to instantiate any number of sub modules with in a top module. For 
+example, if we need a 32 bit ripple carry adder, instead of instantiating 32 full adders, we can 
+write a generate for loop and connect the full adders appropriately.
+</details>
+
+<details>
+<summary> LAB on **for** and **for generate** </summary>
+
+**LAB_1 mux using Generate**
+
+- Under this, we implement a mux using for loop.
+- Advantage of this method over if-case method is that we don't have to write multiple lines.
+- For a 64 input mux, using if-case we need over 64 lines of code, whereas the same can be done under 5-6 lines using for loop.
+**RTL code for mux_generate.v**
+  
+```bash
+module mux_generate (input i0 , input i1, input i2 , input i3 , input [1:0] sel  , output reg y);
+wire [3:0] i_int;
+assign i_int = {i3,i2,i1,i0};
+integer k;
+always @ (*)
+begin
+for(k = 0; k < 4; k=k+1) begin
+	if(k == sel)
+		y = i_int[k];
+end
+end
+endmodule
+```
+
+- Running RTL simulation using and gtkwave
+  
+![15](https://github.com/mavi62/IIITB_VLSI/assets/57127783/1532554f-a466-47d2-97f5-9fd6ad2762c6)
+
+- Synthesis using yosys
+  
+![16](https://github.com/mavi62/IIITB_VLSI/assets/57127783/9d7bbbb9-a3ac-4116-8e47-58fd0d85f5b6)
+
+- Running GLS using iverilog and gtkwave after generationg netlist using yosys
+
+![17](https://github.com/mavi62/IIITB_VLSI/assets/57127783/20c7b73b-d974-436b-9fd3-05419234e253)
+
+- It is observed that both the RTL simulation and GLS have same output waveform. Thus we have
+the correct design.
+
+**LAB_2 demux using generate**
+Under this, We follow up with the implementation of demux
+
+**RTL code for demux_generate.v**
+
+```bash
+module demux_generate (output o0 , output o1, output o2 , output o3, output o4, output o5, output o6 , output o7 , input [2:0] sel  , input i);
+reg [7:0]y_int;
+assign {o7,o6,o5,o4,o3,o2,o1,o0} = y_int;
+integer k;
+always @ (*)
+begin
+y_int = 8'b0;
+for(k = 0; k < 8; k++) begin
+	if(k == sel)
+		y_int[k] = i;
+end
+end
+endmodule
+```
+
+- Simulation using iverilog and gtkwave
+  
+![18](https://github.com/mavi62/IIITB_VLSI/assets/57127783/0bf3bc6b-090d-42a6-9101-11517ab807e6)
+
+- Syntheis using yosys
+  
+![19](https://github.com/mavi62/IIITB_VLSI/assets/57127783/cbdc243f-e89a-4912-973c-ece83e8e2c45)
+
+- Running GLS using iverilog and gtkwave after generating netlist on yosys
+  
+![20](https://github.com/mavi62/IIITB_VLSI/assets/57127783/6765eae7-cb3b-44af-8519-23ad6db8e078)
+
+- We see that both the waveforms for GLS and RTL simulation are the same. Thus we have the correct logic implementataion for demux.
+
+**LAB_3 ripple carry adder**
+
+- Under this, we look into implementation of an 8 bit ripple carry adder.
+- In this we need 8 single bit adders, that is instantiate single bit full adder 8 times. We implement generate for for making this into a simple and shorter code.
+
+**RTL code for rca.v**
+
+```bash
+module rca (input [7:0] num1 , input [7:0] num2 , output [8:0] sum);
+wire [7:0] int_sum;
+wire [7:0]int_co;
+
+genvar i;
+generate
+	for (i = 1 ; i < 8; i=i+1) begin
+		fa u_fa_1 (.a(num1[i]),.b(num2[i]),.c(int_co[i-1]),.co(int_co[i]),.sum(int_sum[i]));
+	end
+
+endgenerate
+fa u_fa_0 (.a(num1[0]),.b(num2[0]),.c(1'b0),.co(int_co[0]),.sum(int_sum[0]));
+
+
+assign sum[7:0] = int_sum;
+assign sum[8] = int_co[7];
+endmodule
+```
+
+- RTL simulation using iverilog and gtkwave
+  
+![21](https://github.com/mavi62/IIITB_VLSI/assets/57127783/e2b6f996-09ad-4bfe-a457-08818aa513af)
+
+- synthesis using yosys and rca grahical representaion
+  
+![22](https://github.com/mavi62/IIITB_VLSI/assets/57127783/8f1cdba8-9403-4fd8-806b-ef8d4c703ecc)
+
+- show fa
+  
+![23](https://github.com/mavi62/IIITB_VLSI/assets/57127783/f59843ba-1967-445f-84ef-f7b0aa8a51c3)
+
+- Running GLS using iverilog and gtkwave after generating a netlist using yosys
+
+![24](https://github.com/mavi62/IIITB_VLSI/assets/57127783/11512829-4acf-4d93-bbe4-bd3f23eb20ad)
+
+- We see the same simulation and GLS waveform, thus the ripple carry adder logic is correct and
+has been correctly synthesizer. The advantage of using generate for is that we have to
+instantiate once and the code multiple copies, ie multiple instances as defined.
 </details>
